@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Peta Toko</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    #map { height: 100vh; width: 100%; }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script>
+// inisialisasi peta
+var map = L.map('map').setView([-1.25, 116.84], 8);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19
+}).addTo(map);
+
+// Baca data CSV
+Papa.parse('data.csv', {
+    download: true,
+    header: true,
+    complete: function(results) {
+        results.data.forEach(function(row) {
+            if(row.Lat_decimal && row.Lon_decimal){
+                L.marker([parseFloat(row.Lat_decimal), parseFloat(row.Lon_decimal)])
+                 .addTo(map)
+                 .bindPopup(row.TOKO);
+            }
+        });
+    }
+});
+</script>
+</body>
+</html>
